@@ -22,20 +22,19 @@ jobs:
       - name: Install deps (clean)
         run: npm ci
 
-      # 🔧 Parche CI-ONLY: limitamos qué step definitions se cargan
-      - name: Limit step definitions to ui + api (CI-only patch)
+      # 🔕 CI workaround: oculto steps que rompen el bundle
+      - name: Hide conflicting step files (CI-only)
         run: |
-          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json'));p['cypress-cucumber-preprocessor']=p['cypress-cucumber-preprocessor']||{};p['cypress-cucumber-preprocessor'].stepDefinitions=['cypress/journeys/step_definitions/ui/**/*.{js,ts}','cypress/journeys/step_definitions/api/**/*.{js,ts}'];fs.writeFileSync('package.json',JSON.stringify(p,null,2));console.log('Patched stepDefinitions for CI');"
+          mkdir -p __ci_hide
+          # Si existen, los movemos para que el preprocessor no los cargue
+          [ -f cypress/journeys/step_definitions/e2e/Login.js ] && mv cypress/journeys/step_definitions/e2e/Login.js __ci_hide/ || true
+          [ -f cypress/journeys/step_definitions/api/Login.js ] && mv cypress/journeys/step_definitions/api/Login.js __ci_hide/ || true
 
-      # ✅ Ejecutamos SOLO tus 2 features
+      # 👉 Usamos command para forzar SOLO tus 2 features
       - name: Run Cypress
         uses: cypress-io/github-action@v6
         with:
-          browser: chrome
-          spec: |
-            cypress/journeys/features/e2e/bookstore_login.feature
-            cypress/journeys/features/e2e/lambdatest_input_form.feature
-          env: ENV=DEV
+          command: npx cypress run --browser chrome -e ENV=DEV --spec "cypress/journeys/features/e2e/bookstore_login.feature,cypress/journeys/features/e2e/lambdatest_input_form.feature"
 
       - name: Generate HTML report (optional)
         run: |
@@ -53,4 +52,3 @@ jobs:
             cypress/videos
             jsonlogs
             reports
-
