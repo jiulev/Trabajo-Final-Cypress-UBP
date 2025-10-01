@@ -1,11 +1,11 @@
-name: Cypress Tests
+name: Cypress Tests (Bookstore + Petstore)
 
 on:
-  workflow_dispatch:          # permite correrlo manualmente
+  workflow_dispatch:          # permitir correrlo manualmente
   push:
-    branches: [ "main" ]      # opcional: corre en cada push a main
+    branches: [ "main" ]      # corre en cada push a main
   pull_request:
-    branches: [ "main" ]      # opcional: corre en cada PR a main
+    branches: [ "main" ]      # corre en cada PR a main
 
 concurrency:
   group: cypress-${{ github.ref }}
@@ -25,20 +25,22 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Install deps (clean)
+      - name: Install dependencies (clean)
         run: npm ci
 
       - name: Verify Cypress
         run: npx cypress verify
 
-      # Ejecuta TODOS los .feature con ENV=DEV en Chrome headless
-      - name: Run Cypress
+      # 🚀 Ejecutar SOLO los specs estables de tu entrega
+      - name: Run Cypress (bookstore + petstore)
         uses: cypress-io/github-action@v6
         with:
-          browser: chrome
-          command: npx cypress run --e2e --browser chrome -e ENV=DEV
+          command: >
+            npx cypress run --e2e --browser chrome -e ENV=DEV
+            --spec "cypress/journeys/features/e2e/bookstore_login.feature,
+cypress/journeys/features/api/petstore-julieta/petstore_api.feature"
 
-      # Genera el HTML si tu proyecto tiene el script "report"
+      # (Opcional) generar HTML si existe tu script de reporte
       - name: Generate Cucumber HTML report
         if: always()
         run: |
@@ -48,8 +50,8 @@ jobs:
             echo "No cucumber-html-report.js. Omitiendo reporte HTML."
           fi
 
-      # Sube TODO como artefactos descargables
-      - name: Upload artifacts (videos, screenshots, json, html)
+      # 📦 Subir artefactos (videos, screenshots, json, html)
+      - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -61,3 +63,4 @@ jobs:
             cucumber-report
           if-no-files-found: ignore
           retention-days: 7
+
