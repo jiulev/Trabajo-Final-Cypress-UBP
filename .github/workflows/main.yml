@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 🔧 FIX CI: cubrir diferencias de mayúsc/minúsc (Linux es case-sensitive)
+      # 🔧 FIX Linux case-sensitive: garantizo archivos que el bundler exige
       - name: Make Linux case-safe (create copies or stubs)
         shell: bash
         run: |
@@ -52,11 +52,7 @@ jobs:
           mk_stub_page "cypress/pages/practicetestautomation/LoginPage.js"
           mk_stub_page "cypress/pages/practicetestautomation/SuccessPage.js"
 
-          echo "Case-safe setup done:"
-          ls -la cypress/services || true
-          ls -la cypress/pages/practicetestautomation || true
-
-      # 👀 Verificamos que existan los 3 specs (fail temprano si faltan)
+      # ✅ Verifico que existan los 3 features (fail temprano si falta alguno)
       - name: Check selected spec files exist
         shell: bash
         run: |
@@ -71,14 +67,18 @@ jobs:
           done
           echo "All selected specs present."
 
-      # ▶️ Ejecutamos SOLO tus 3 features (SIN comillas alrededor de la lista)
-      - name: Run Cypress (only selected specs)
+      # ▶️ Ejecutar SOLO tus 3 specs (sin comillas, una por línea)
+      - name: Run Cypress
         uses: cypress-io/github-action@v6
         with:
-          command: >
-            npx cypress run
-            -e ENV=DEV
-            --spec cypress/journeys/features/e2e/bookstore_login.feature,cypress/journeys/features/e2e/lambdatest_input_form.feature,cypress/journeys/features/api/petstore-julieta/petstore_api.feature
+          browser: chrome
+          spec: |
+            cypress/journeys/features/e2e/bookstore_login.feature
+            cypress/journeys/features/e2e/lambdatest_input_form.feature
+            cypress/journeys/features/api/petstore-julieta/petstore_api.feature
+        env:
+          # equivale a pasar -e ENV=DEV (Cypress lee CYPRESS_ENV)
+          CYPRESS_ENV: DEV
 
       # 📎 Evidencias siempre
       - name: Upload artifacts
@@ -91,4 +91,3 @@ jobs:
             cypress/videos
             jsonlogs
             reports
-
