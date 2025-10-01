@@ -22,66 +22,51 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 🔧 FIX CI: crear archivos con la capitalización que exige el bundler.
-      # - Si existen con otra may/min, los copiamos.
-      # - Si NO existen, generamos stubs mínimos (no afectan tus tests).
+      # 🔧 FIX CI sin heredocs: crear/copiar archivos con la capitalización exacta que exigen los imports.
       - name: Make Linux case-safe (create copies or stubs)
         shell: bash
         run: |
-          set -e
+          set -euo pipefail
 
           # --- services/Login(.js) ---
           mkdir -p cypress/services
-          # si existe login.js y no Login.js -> copiar
-          if [ -f cypress/services/login.js ] && [ ! -f cypress/services/Login.js ]; then
-            cp cypress/services/login.js cypress/services/Login.js
+
+          # Si no existe ninguno de los dos, creo un stub mínimo
+          if [ ! -f cypress/services/Login.js ] && [ ! -f cypress/services/login.js ]; then
+            printf '%s\n' \
+              '// STUB creado en CI (case-sensitive fix).' \
+              'const Login = {};' \
+              'export default Login;' > cypress/services/Login.js
           fi
-          # si existe Login.js y no login.js -> copiar
+
+          # Duplico para cubrir ambas variantes de import
           if [ -f cypress/services/Login.js ] && [ ! -f cypress/services/login.js ]; then
             cp cypress/services/Login.js cypress/services/login.js
           fi
-          # si no existe ninguno -> stub
-          if [ ! -f cypress/services/login.js ] && [ ! -f cypress/services/Login.js ]; then
-            cat > cypress/services/Login.js <<'EOF'
-            // STUB creado en CI: evita fallos de bundling por case-sensitive.
-            const Login = {
-              // agrega métodos si más adelante hicieran falta; no se usan en los specs ejecutados
-            };
-            export default Login;
-            EOF
-            cp cypress/services/Login.js cypress/services/login.js
+          if [ -f cypress/services/login.js ] && [ ! -f cypress/services/Login.js ]; then
+            cp cypress/services/login.js cypress/services/Login.js
           fi
 
           # --- pages/practicetestautomation/LoginPage(.js) y SuccessPage(.js) ---
           mkdir -p cypress/pages/practicetestautomation
 
-          make_stub_page () {
-            local name="$1"
-            local path="cypress/pages/practicetestautomation/${name}.js"
+          mk_stub_page () {
+            local path="$1"
             if [ ! -f "$path" ]; then
-              cat > "$path" <<'EOF'
-              // STUB de PageObject creado en CI. No se usa en los specs seleccionados.
-              export default class PageStub {
-                constructor(){ }
-              }
-              EOF
+              printf '%s\n' \
+                '// STUB de PageObject creado en CI (no se usa en los specs ejecutados).' \
+                'export default class PageStub { constructor(){} }' > "$path"
             fi
           }
 
-          # Si hay variantes con otra capitalización, copiamos a la forma exacta que importan los steps
-          for base in LoginPage SuccessPage; do
-            # buscar variantes comunes
-            for v in loginPage Loginpage LOGINPAGE successPage Successpage SUCCESSPAGE; do
-              if [ -f "cypress/pages/practicetestautomation/${v}.js" ] && [ ! -f "cypress/pages/practicetestautomation/${base}.js" ]; then
-                cp "cypress/pages/practicetestautomation/${v}.js" "cypress/pages/practicetestautomation/${base}.js"
-              fi
-            done
-            make_stub_page "$base"
-          done
+          mk_stub_page "cypress/pages/practicetestautomation/LoginPage.js"
+          mk_stub_page "cypress/pages/practicetestautomation/SuccessPage.js"
 
-          echo "CI case-safe setup done."
+          echo "Case-safe setup done:"
+          ls -la cypress/services || true
+          ls -la cypress/pages/practicetestautomation || true
 
-      # ▶️ Ejecutamos SOLO tus 3 features (las rutas exactas que pediste)
+      # ▶️ Ejecutamos SOLO tus 3 features
       - name: Run Cypress (only selected specs)
         uses: cypress-io/github-action@v6
         with:
@@ -103,3 +88,4 @@ jobs:
             cypress/videos
             jsonlogs
             reports
+
