@@ -4,148 +4,6 @@
     "elements": [
       {
         "description": "",
-        "id": "petstore---crud-básico-de-mascotas;crear-y-consultar-una-mascota",
-        "keyword": "Scenario",
-        "line": 7,
-        "name": "Crear y consultar una mascota",
-        "steps": [
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 4,
-            "name": "defino headers comunes de Petstore",
-            "match": {
-              "location": "not available:0"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 16000000
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "When ",
-            "line": 8,
-            "name": "creo una nueva mascota con datos generados",
-            "match": {
-              "location": "not available:0"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 979000000
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Then ",
-            "line": 9,
-            "name": "puedo consultar esa mascota por su id y obtener status 200",
-            "match": {
-              "location": "not available:0"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 195000000
-            }
-          }
-        ],
-        "tags": [
-          {
-            "name": "@API",
-            "line": 6
-          },
-          {
-            "name": "@Petstore",
-            "line": 6
-          }
-        ],
-        "type": "scenario"
-      },
-      {
-        "description": "",
-        "id": "petstore---crud-básico-de-mascotas;crear-y-eliminar-mascota",
-        "keyword": "Scenario",
-        "line": 12,
-        "name": "Crear y eliminar mascota",
-        "steps": [
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 4,
-            "name": "defino headers comunes de Petstore",
-            "match": {
-              "location": "not available:0"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 18000000
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 13,
-            "name": "ya existe una mascota creada en Petstore",
-            "match": {
-              "location": "not available:0"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 1340000000
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "When ",
-            "line": 14,
-            "name": "elimino la mascota creada",
-            "match": {
-              "location": "not available:0"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 369000000
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Then ",
-            "line": 15,
-            "name": "al consultar por id obtengo 404",
-            "match": {
-              "location": "not available:0"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 4136000000
-            }
-          }
-        ],
-        "tags": [
-          {
-            "name": "@API",
-            "line": 11
-          },
-          {
-            "name": "@Petstore",
-            "line": 11
-          }
-        ],
-        "type": "scenario"
-      }
-    ],
-    "id": "petstore---crud-básico-de-mascotas",
-    "line": 1,
-    "keyword": "Feature",
-    "name": "Petstore - CRUD básico de mascotas",
-    "tags": [],
-    "uri": "cypress\\journeys\\features\\api\\petstore-julieta\\petstore_api.feature"
-  },
-  {
-    "description": "",
-    "elements": [
-      {
-        "description": "",
         "id": "busqueda-de-productos;buscar-un-producto-exitosamente",
         "keyword": "Scenario",
         "line": 3,
@@ -161,7 +19,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 4762000000
+              "duration": 2223000000
             }
           },
           {
@@ -174,7 +32,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2311000000
+              "duration": 2018000000
             }
           },
           {
@@ -187,7 +45,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 885000000
+              "duration": 952000000
             }
           },
           {
@@ -200,7 +58,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 26000000
+              "duration": 30000000
             }
           },
           {
@@ -213,7 +71,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1089000000
+              "duration": 760000000
             }
           },
           {
@@ -226,7 +84,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 26000000
+              "duration": 25000000
             }
           },
           {
@@ -239,7 +97,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 31000000
+              "duration": 27000000
             }
           }
         ],
@@ -274,7 +132,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 2746000000
+              "duration": 2115000000
             }
           },
           {
@@ -287,7 +145,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 556000000
+              "duration": 553000000
             }
           },
           {
@@ -300,7 +158,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 47000000
+              "duration": 26000000
             }
           },
           {
@@ -313,7 +171,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 850000000
+              "duration": 648000000
             }
           },
           {
@@ -326,7 +184,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 623000000
+              "duration": 536000000
             }
           },
           {
@@ -339,7 +197,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 155000000
+              "duration": 132000000
             }
           },
           {
@@ -352,7 +210,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 35000000
+              "duration": 22000000
             }
           },
           {
@@ -365,7 +223,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 32000000
+              "duration": 26000000
             }
           },
           {
@@ -378,7 +236,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 457000000
+              "duration": 446000000
             }
           },
           {
@@ -391,7 +249,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 457000000
+              "duration": 474000000
             }
           },
           {
@@ -404,7 +262,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 637000000
+              "duration": 674000000
             }
           },
           {
@@ -417,7 +275,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 587000000
+              "duration": 370000000
             }
           },
           {
@@ -430,7 +288,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 910000000
+              "duration": 741000000
             }
           },
           {
@@ -443,7 +301,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 155000000
+              "duration": 161000000
             }
           },
           {
@@ -456,7 +314,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1022000000
+              "duration": 1090000000
             }
           },
           {
@@ -469,7 +327,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1779000000
+              "duration": 1097000000
             }
           },
           {
@@ -482,7 +340,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 29000000
+              "duration": 39000000
             }
           },
           {
@@ -495,7 +353,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 7106000000
+              "duration": 5461000000
             }
           },
           {
@@ -508,7 +366,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 885000000
+              "duration": 582000000
             }
           },
           {
@@ -521,7 +379,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 28000000
+              "duration": 27000000
             }
           }
         ],
@@ -565,7 +423,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 852000000
+              "duration": 1253000000
             }
           },
           {
@@ -578,7 +436,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 6389000000
+              "duration": 7069000000
             }
           },
           {
@@ -591,7 +449,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1191000000
+              "duration": 1121000000
             }
           },
           {
@@ -604,7 +462,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1148000000
+              "duration": 1186000000
             }
           },
           {
@@ -617,7 +475,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 177000000
+              "duration": 494000000
             }
           },
           {
@@ -630,7 +488,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 3304000000
+              "duration": 2579000000
             }
           }
         ],
@@ -659,7 +517,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 854000000
+              "duration": 857000000
             }
           },
           {
@@ -672,7 +530,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 3614000000
+              "duration": 4162000000
             }
           },
           {
@@ -685,7 +543,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 506000000
+              "duration": 1058000000
             }
           },
           {
@@ -698,7 +556,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 485000000
+              "duration": 661000000
             }
           },
           {
@@ -711,7 +569,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 141000000
+              "duration": 285000000
             }
           },
           {
@@ -724,7 +582,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 976000000
+              "duration": 555000000
             }
           }
         ],
@@ -764,7 +622,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 4318000000
+              "duration": 4130000000
             }
           },
           {
@@ -777,7 +635,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1426000000
+              "duration": 1641000000
             }
           },
           {
@@ -790,7 +648,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1925000000
+              "duration": 1763000000
             }
           },
           {
@@ -803,7 +661,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1389000000
+              "duration": 1381000000
             }
           },
           {
@@ -816,7 +674,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1297000000
+              "duration": 1615000000
             }
           },
           {
@@ -829,7 +687,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1742000000
+              "duration": 1750000000
             }
           },
           {
@@ -842,7 +700,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 605000000
+              "duration": 571000000
             }
           },
           {
@@ -855,7 +713,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1388000000
+              "duration": 1301000000
             }
           },
           {
@@ -868,7 +726,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1922000000
+              "duration": 1712000000
             }
           },
           {
@@ -881,7 +739,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1178000000
+              "duration": 1299000000
             }
           },
           {
@@ -894,7 +752,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1140000000
+              "duration": 1105000000
             }
           },
           {
@@ -907,7 +765,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 1042000000
+              "duration": 1075000000
             }
           },
           {
@@ -920,7 +778,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 888000000
+              "duration": 993000000
             }
           },
           {
@@ -933,7 +791,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 255000000
+              "duration": 271000000
             }
           }
         ],
@@ -947,5 +805,147 @@
     "name": "LambdaTest - Input Form",
     "tags": [],
     "uri": "cypress\\journeys\\features\\e2e\\lambdatest_input_form.feature"
+  },
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "petstore---crud-básico-de-mascotas;crear-y-consultar-una-mascota",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Crear y consultar una mascota",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "defino headers comunes de Petstore",
+            "match": {
+              "location": "not available:0"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 8,
+            "name": "creo una nueva mascota con datos generados",
+            "match": {
+              "location": "not available:0"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1001000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "puedo consultar esa mascota por su id y obtener status 200",
+            "match": {
+              "location": "not available:0"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 219000000
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@API",
+            "line": 6
+          },
+          {
+            "name": "@Petstore",
+            "line": 6
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "petstore---crud-básico-de-mascotas;crear-y-eliminar-mascota",
+        "keyword": "Scenario",
+        "line": 12,
+        "name": "Crear y eliminar mascota",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "defino headers comunes de Petstore",
+            "match": {
+              "location": "not available:0"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 17000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 13,
+            "name": "ya existe una mascota creada en Petstore",
+            "match": {
+              "location": "not available:0"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2356000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "elimino la mascota creada",
+            "match": {
+              "location": "not available:0"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1325000000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "al consultar por id obtengo 404",
+            "match": {
+              "location": "not available:0"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2131000000
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@API",
+            "line": 11
+          },
+          {
+            "name": "@Petstore",
+            "line": 11
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "petstore---crud-básico-de-mascotas",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Petstore - CRUD básico de mascotas",
+    "tags": [],
+    "uri": "cypress\\journeys\\features\\api\\petstore-julieta\\petstore_api.feature"
   }
 ]
