@@ -1,91 +1,49 @@
-name: Cypress Tests (Bookstore + Petstore)
+name: Cypress Tests
 
 on:
-  workflow_dispatch:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
-concurrency:
-  group: cypress-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   e2e:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
-      - name: Install dependencies (clean)
+      - name: Install dependencies
         run: npm ci
 
-      - name: Verify Cypress
-        run: npx cypress verify
-
-      # 🔕 Deshabilitar en CI step files con imports rotos (sin tocar tu repo)
-      - name: Temporarily disable unused/broken step files (CI only)
+      # 🔹 Fix: evitar conflictos de mayúsculas/minúsculas en Linux
+      - name: Fix case-sensitive imports
         run: |
-          mv cypress/journeys/step_definitions/api/Login.js cypress/journeys/step_definitions/api/Login.js.ci_skip || true
-          mv cypress/journeys/step_definitions/e2e/Login.js cypress/journeys/step_definitions/e2e/Login.js.ci_skip || true
-
-      # (OPCIONAL) Si ves error "spec-envelopes"/"Unexpected state", descomenta este bloque para
-      # desactivar messages.enabled SOLO en CI sin commitear cambios:
-      #
-      # - name: Disable cucumber messages in CI (optional)
-      #   if: always()
-      #   run: |
-      #     node -e "
-      #       const fs = require('fs');
-      #       const p = 'package.json';
-      #       const j = JSON.parse(fs.readFileSync(p));
-      #       if (j['cypress-cucumber-preprocessor']?.messages?.enabled) {
-      #         j['cypress-cucumber-preprocessor'].messages.enabled = false;
-      #         fs.writeFileSync(p, JSON.stringify(j, null, 2));
-      #         console.log('messages.enabled = false (CI only)');
-      #       } else {
-      #         console.log('messages ya estaba deshabilitado o no existe.');
-      #       }
-      #     "
-
-      # 🚀 Ejecutar SOLO los specs de tu entrega
-      - name: Run Cypress (bookstore + petstore)
-        uses: cypress-io/github-action@v6
-        with:
-          browser: chrome
-          env: ENV=DEV
-          spec: |
-            cypress/journeys/features/e2e/bookstore_login.feature
-            cypress/journeys/features/api/petstore-julieta/petstore_api.feature
-
-      # (Opcional) generar HTML si tenés el script "report"
-      - name: Generate Cucumber HTML report
-        if: always()
-        run: |
-          if [ -f cucumber-html-report.js ]; then
-            npm run report
-          else
-            echo "No cucumber-html-report.js. Omitiendo reporte HTML."
+          if [ -f cypress/services/Login.js ]; then
+            mv cypress/services/Login.js cypress/services/login.js
           fi
 
-      # 📦 Artefactos descargables
-      - name: Upload artifacts
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v6
+        with:
+          command: >
+            npx cypress run --e2e --browser chrome
+            -e ENV=DEV
+            --spec
+            "cypress/journeys/features/e2e/bookstore_login.feature,cypress/journeys/features/e2e/lambdatest_input_form.feature"
+
+      - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-artifacts
+          name: cypress-results
           path: |
-            cypress/videos
             cypress/screenshots
+            cypress/videos
             jsonlogs
-            cucumber-report
-          if-no-files-found: ignore
-          retention-days: 7
