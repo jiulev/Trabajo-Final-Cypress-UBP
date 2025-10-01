@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -19,26 +19,27 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install deps
         run: npm ci
 
-      # 🔹 Fix: evitar conflictos de mayúsculas/minúsculas en Linux
-      - name: Fix case-sensitive imports
+      # Evita problemas de mayúsculas/minúsculas en Linux (solo si existe)
+      - name: Linux case-fix for Login service (optional)
         run: |
           if [ -f cypress/services/Login.js ]; then
             mv cypress/services/Login.js cypress/services/login.js
           fi
 
-      - name: Run Cypress tests
+      - name: Run Cypress (only selected specs)
         uses: cypress-io/github-action@v6
         with:
-          command: >
-            npx cypress run --e2e --browser chrome
-            -e ENV=DEV
-            --spec
-            "cypress/journeys/features/e2e/bookstore_login.feature,cypress/journeys/features/e2e/lambdatest_input_form.feature"
+          browser: chrome
+          # 👇 AQUÍ seleccionamos los features que hiciste
+          spec: |
+            cypress/journeys/features/e2e/bookstore_login.feature
+            cypress/journeys/features/e2e/lambdatest_input_form.feature
+          env: ENV=DEV
 
-      - name: Upload test results
+      - name: Upload artifacts (videos/screenshots/jsonlogs)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -47,3 +48,4 @@ jobs:
             cypress/screenshots
             cypress/videos
             jsonlogs
+
