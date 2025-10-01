@@ -2,21 +2,13 @@ name: Cypress Tests
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   e2e:
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        spec:
-          - cypress/journeys/features/e2e/bookstore_login.feature
-          - cypress/journeys/features/e2e/lambdatest_input_form.feature
-          - cypress/journeys/features/api/petstore-julieta/petstore_api.feature
 
     steps:
       - name: Checkout
@@ -27,62 +19,54 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install deps (clean)
         run: npm ci
 
-      # FIX Linux case-sensitive (crea/copias mínimos si faltan)
-      - name: Make Linux case-safe (create copies or stubs)
-        shell: bash
+      # 🔕 CI workaround: oculto steps que rompen el bundle
+      - name: Hide conflicting step files (CI-only)
         run: |
-          set -euo pipefail
+          mkdir -p __ci_hide
+          [ -f cypress/journeys/step_definitions/e2e/Login.js ] && mv cypress/journeys/step_definitions/e2e/Login.js __ci_hide/ || true
+          [ -f cypress/journeys/step_definitions/api/Login.js ] && mv cypress/journeys/step_definitions/api/Login.js __ci_hide/ || true
 
-          mkdir -p cypress/services
-          if [ ! -f cypress/services/Login.js ] && [ ! -f cypress/services/login.js ]; then
-            printf '%s\n' \
-              '// STUB creado en CI (case-sensitive fix).' \
-              'const Login = {};' \
-              'export default Login;' > cypress/services/Login.js
-          fi
-          [ -f cypress/services/Login.js ] || cp cypress/services/login.js cypress/services/Login.js
-          [ -f cypress/services/login.js ] || cp cypress/services/Login.js cypress/services/login.js
-
-          mkdir -p cypress/pages/practicetestautomation
-          mk_stub_page () {
-            local path="$1"
-            if [ ! -f "$path" ]; then
-              printf '%s\n' \
-                '// STUB de PageObject creado en CI (no se usa en los specs ejecutados).' \
-                'export default class PageStub { constructor(){} }' > "$path"
-            fi
-          }
-          mk_stub_page "cypress/pages/practicetestautomation/LoginPage.js"
-          mk_stub_page "cypress/pages/practicetestautomation/SuccessPage.js"
-
-      # Chequeo que el spec del job exista
-      - name: Check spec exists
+      # 🔍 Verifico que los 3 specs existan (fail temprano si falta alguno)
+      - name: Check selected spec files exist
         shell: bash
         run: |
           set -e
-          echo "Spec a ejecutar: ${{ matrix.spec }}"
-          test -f "${{ matrix.spec }}" || (echo "No existe ${{ matrix.spec }}" && exit 1)
+          for f in \
+            cypress/journeys/features/e2e/bookstore_login.feature \
+            cypress/journeys/features/e2e/lambdatest_input_form.feature \
+            cypress/journeys/features/api/petstore-julieta/petstore_api.feature
+          do
+            echo "Checking $f"; test -f "$f"
+          done
+          echo "All selected specs present."
 
-      # Ejecutar UN spec por job (sin command, sin comillas)
+      # 👉 Ejecutamos SOLO tus 3 features (SIN comillas en --spec)
       - name: Run Cypress
         uses: cypress-io/github-action@v6
         with:
-          browser: chrome
-          spec: ${{ matrix.spec }}
-        env:
-          CYPRESS_ENV: DEV  # equivale a -e ENV=DEV
+          command: >
+            npx cypress run
+            --browser chrome
+            -e ENV=DEV
+            --spec cypress/journeys/features/e2e/bookstore_login.feature,cypress/journeys/features/e2e/lambdatest_input_form.feature,cypress/journeys/features/api/petstore-julieta/petstore_api.feature
 
-      # Subir evidencias
+      - name: Generate HTML report (optional)
+        run: |
+          if [ -f cucumber-html-report.js ]; then
+            npm run report
+          fi
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-artifacts-${{ matrix.spec }}
+          name: cypress-artifacts
           path: |
             cypress/screenshots
             cypress/videos
             jsonlogs
             reports
+
