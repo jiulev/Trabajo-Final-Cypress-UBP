@@ -5,20 +5,21 @@ const { addCucumberPreprocessorPlugin } = require('@badeball/cypress-cucumber-pr
 const createEsbuildPlugin = require('@badeball/cypress-cucumber-preprocessor/esbuild').default;
 
 async function setupNodeEvents(on, config) {
-  // 👈 Esto primero (clave para que ande en "open")
-  await addCucumberPreprocessorPlugin(on, config);
+  // ✅ Limitar a archivos *.steps.js (UI y API)
+  await addCucumberPreprocessorPlugin(on, config, {
+    stepDefinitions: [
+      'cypress/journeys/step_definitions/ui/**/*.steps.js',
+      'cypress/journeys/step_definitions/api/**/*.steps.js',
+    ],
+  });
 
-  // 👈 Un ÚNICO file:preprocessor
+  // ÚNICO preprocessor
   on('file:preprocessor', createBundler({
     plugins: [createEsbuildPlugin(config)],
   }));
 
-  // No registres otro "file:preprocessor" ni sobrescribas "on('task', ...)" después
-  // (si necesitás tasks propios, decime y te muestro cómo combinarlos sin pisar los del plugin)
-
   // tags por env (lo tuyo)
   config.env.tags = process.env.TAGS || config.env.tags || '';
-
   return config;
 }
 
