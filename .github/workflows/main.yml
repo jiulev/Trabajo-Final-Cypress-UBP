@@ -1,0 +1,63 @@
+name: Cypress Tests
+
+on:
+  workflow_dispatch:          # permite correrlo manualmente
+  push:
+    branches: [ "main" ]      # opcional: corre en cada push a main
+  pull_request:
+    branches: [ "main" ]      # opcional: corre en cada PR a main
+
+concurrency:
+  group: cypress-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps (clean)
+        run: npm ci
+
+      - name: Verify Cypress
+        run: npx cypress verify
+
+      # Ejecuta TODOS los .feature con ENV=DEV en Chrome headless
+      - name: Run Cypress
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          command: npx cypress run --e2e --browser chrome -e ENV=DEV
+
+      # Genera el HTML si tu proyecto tiene el script "report"
+      - name: Generate Cucumber HTML report
+        if: always()
+        run: |
+          if [ -f cucumber-html-report.js ]; then
+            npm run report
+          else
+            echo "No cucumber-html-report.js. Omitiendo reporte HTML."
+          fi
+
+      # Sube TODO como artefactos descargables
+      - name: Upload artifacts (videos, screenshots, json, html)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-artifacts
+          path: |
+            cypress/videos
+            cypress/screenshots
+            jsonlogs
+            cucumber-report
+          if-no-files-found: ignore
+          retention-days: 7
