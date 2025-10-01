@@ -22,30 +22,39 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      # Evita problemas de mayúsculas/minúsculas en Linux (solo si existe)
-      - name: Linux case-fix for Login service (optional)
+      # 🔧 Parcheamos package.json SOLO en CI para no tocar tu repo:
+      # limitamos el glob de stepDefinitions a ui y api
+      - name: Limit step definitions to ui + api (CI-only patch)
         run: |
-          if [ -f cypress/services/Login.js ]; then
-            mv cypress/services/Login.js cypress/services/login.js
-          fi
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json'));p['cypress-cucumber-preprocessor']=p['cypress-cucumber-preprocessor']||{};p['cypress-cucumber-preprocessor'].stepDefinitions=['cypress/journeys/step_definitions/ui/**/*.{js,ts}','cypress/journeys/step_definitions/api/**/*.{js,ts}'];fs.writeFileSync('package.json',JSON.stringify(p,null,2));console.log('Patched stepDefinitions for CI');"
 
+      # ✅ Ejecutamos SOLO tus dos features
       - name: Run Cypress (only selected specs)
         uses: cypress-io/github-action@v6
         with:
           browser: chrome
-          # 👇 AQUÍ seleccionamos los features que hiciste
           spec: |
             cypress/journeys/features/e2e/bookstore_login.feature
             cypress/journeys/features/e2e/lambdatest_input_form.feature
           env: ENV=DEV
 
-      - name: Upload artifacts (videos/screenshots/jsonlogs)
+      # (Opcional) Generar el reporte HTML si tu script existe
+      - name: Generate HTML report (optional)
+        run: |
+          if [ -f cucumber-html-report.js ]; then
+            npm run report
+          fi
+
+      # Subimos artefactos para ver evidencias
+      - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-results
+          name: cypress-artifacts
           path: |
             cypress/screenshots
             cypress/videos
             jsonlogs
+            reports
+
 
